@@ -1,4 +1,4 @@
-package es.infolojo.infolojopokedex.data.remote
+package es.infolojo.infolojopokedex.data.remote.list
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -14,5 +14,5 @@ data class PokemonsContainerDTO(
     val count: Long?,
 
     @SerializedName("results")
-    val results: List<PokemonDTO?>?
+    val results: List<PokemonListDTO?>?
 ) : Serializable

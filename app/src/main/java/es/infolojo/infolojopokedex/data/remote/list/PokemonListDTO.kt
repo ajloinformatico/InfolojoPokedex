@@ -1,9 +1,9 @@
-package es.infolojo.infolojopokedex.data.remote
+package es.infolojo.infolojopokedex.data.remote.list
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class PokemonDTO(
+data class PokemonListDTO(
     @SerializedName("name")
     val name: String?,
 

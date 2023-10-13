@@ -3,7 +3,7 @@ package es.infolojo.infolojopokedex.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import es.infolojo.infolojopokedex.data.repository.RemoteRepository
+import es.infolojo.infolojopokedex.data.bussines.list.PokemonListContainerBO
 import es.infolojo.infolojopokedex.data.repository.RemoteRepositoryImpl
 import es.infolojo.infolojopokedex.ui.states.PokemonListState
 import es.infolojo.infolojopokedex.ui.vo.toVO
@@ -32,8 +32,14 @@ class PokemonListViewModel @Inject constructor(
 
     private fun getPokemons() {
         viewModelScope.launch {
+
+            val pokemonsContainerBO: PokemonListContainerBO? = remoteRepository.getPokemons()
+            val pokemonsVO = pokemonsContainerBO?.pokemons?.mapIndexed { index, pokemon ->
+                pokemon.toVO(pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.image.orEmpty())
+            }.orEmpty()
+
             _uiState.value = PokemonListState.Render(
-                pokemnos = remoteRepository.getPokemons()?.pokemons.orEmpty().map { it.toVO() }
+                pokemnos = pokemonsVO
             )
         }
     }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import es.infolojo.infolojopokedex.ui.actions.AppActions
 import es.infolojo.infolojopokedex.ui.components.AppBar
 import es.infolojo.infolojopokedex.ui.states.PokemonListState
@@ -99,7 +101,18 @@ private fun PokemonListVieHolder(pokemonVO: PokemonVO) {
             .fillMaxWidth()
             .padding(16.dp),
     ) {
-        Text(text = pokemonVO.name)
+        with(pokemonVO) {
+            AsyncImage(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                model = image,
+                contentDescription = "$name image"
+            )
+            Text(
+                text = name,
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
     }
 }
 
@@ -107,6 +120,10 @@ private fun PokemonListVieHolder(pokemonVO: PokemonVO) {
 @Composable
 fun PokemonListScreenPreview() {
     InfolojoPokedexTheme {
-        PokemonListScreen(null, {})
+        PokemonListScreen(
+            navController = null,
+            pokemonListViewModel = hiltViewModel(),
+            appActions = {}
+        )
     }
 }

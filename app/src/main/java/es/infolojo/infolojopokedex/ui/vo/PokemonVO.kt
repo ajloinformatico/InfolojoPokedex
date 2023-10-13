@@ -1,6 +1,7 @@
 package es.infolojo.infolojopokedex.ui.vo
 
-import es.infolojo.infolojopokedex.data.bussines.PokemonBO
+import es.infolojo.infolojopokedex.data.bussines.detail.PokemonDetailBO
+import es.infolojo.infolojopokedex.data.bussines.list.PokemonListBO
 
 data class PokemonVO(
     val name: String,
@@ -8,8 +9,8 @@ data class PokemonVO(
     val detailUrl: String
 )
 
-fun PokemonBO.toVO(): PokemonVO = PokemonVO(
+fun PokemonListBO.toVO(image: String): PokemonVO = PokemonVO(
     name = this.name,
-    image = "",
+    image = image,
     detailUrl = this.detailUrl
 )
