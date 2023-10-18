@@ -1,7 +1,9 @@
 package es.infolojo.infolojopokedex.ui.screens
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,6 +30,7 @@ import es.infolojo.infolojopokedex.ui.states.PokemonListState
 import es.infolojo.infolojopokedex.ui.theme.InfolojoPokedexTheme
 import es.infolojo.infolojopokedex.ui.viewmodel.PokemonListViewModel
 import es.infolojo.infolojopokedex.ui.vo.PokemonVO
+import es.infolojo.infolojopokedex.utils.toCustomCapitalize
 
 
 private const val SCREEN_NAME = "Pokedex"
@@ -87,14 +90,14 @@ fun PokemonRecyclerView(
     LazyColumn {
         items(pokemons.size) { index ->
             pokemons.getOrNull(index)?.let { pokemon ->
-                PokemonListVieHolder(pokemonVO = pokemon)
+                PokemonListVieHolder(pokemonVO = pokemon, index = index + 1)
             }
         }
     }
 }
 
 @Composable
-private fun PokemonListVieHolder(pokemonVO: PokemonVO) {
+private fun PokemonListVieHolder(pokemonVO: PokemonVO, index: Int) {
     // TODO CONTINUE HERE ADDING POKEMON IMAGE
     Column(
         modifier = Modifier
@@ -102,16 +105,46 @@ private fun PokemonListVieHolder(pokemonVO: PokemonVO) {
             .padding(16.dp),
     ) {
         with(pokemonVO) {
+            // Pokemon name
+            Row {
+                Text(
+                    text = name.toCustomCapitalize(),
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = "# $index",
+                    style = MaterialTheme.typography.titleLarge,
+                )
+            }
+
+            // Pokemon image
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth(),
                 model = image,
                 contentDescription = "$name image"
             )
-            Text(
-                text = name,
-                style = MaterialTheme.typography.titleLarge
-            )
+
+
+            // Pokemon type
+            Column {
+                Text(text = "Types", style = MaterialTheme.typography.titleMedium)
+                Row {
+                    type.map {
+                        Column(modifier = Modifier.padding(end = 8.dp, top = 4.dp)) {
+                            Text(
+                                text = it.name,
+                                modifier = Modifier
+                                    .background(
+                                        color = it.color.colorValue
+                                    )
+                                    .padding(start = 4.dp, end = 4.dp, bottom = 4.dp)
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

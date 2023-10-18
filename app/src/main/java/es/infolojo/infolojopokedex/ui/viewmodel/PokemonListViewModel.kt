@@ -32,15 +32,18 @@ class PokemonListViewModel @Inject constructor(
 
     private fun getPokemons() {
         viewModelScope.launch {
-
             val pokemonsContainerBO: PokemonListContainerBO? = remoteRepository.getPokemons()
             val pokemonsVO = pokemonsContainerBO?.pokemons?.mapIndexed { index, pokemon ->
-                pokemon.toVO(pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.image.orEmpty())
+                pokemon.toVO(
+                    image = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.image.orEmpty(),
+                    type = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.types.orEmpty().toVO()
+                )
             }.orEmpty()
 
             _uiState.value = PokemonListState.Render(
                 pokemnos = pokemonsVO
             )
+
         }
     }
 }
