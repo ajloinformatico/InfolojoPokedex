@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import es.infolojo.infolojopokedex.data.bussines.list.PokemonListContainerBO
 import es.infolojo.infolojopokedex.data.repository.RemoteRepositoryImpl
 import es.infolojo.infolojopokedex.ui.states.PokemonListState
+import es.infolojo.infolojopokedex.ui.vo.PokemonVO
 import es.infolojo.infolojopokedex.ui.vo.toVO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -25,6 +26,8 @@ class PokemonListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<PokemonListState?>(null)
     val uiState: StateFlow<PokemonListState?> = _uiState.asStateFlow()
 
+    private val _pokemonsVO = mutableListOf<PokemonVO>()
+
     init {
         _uiState.value = PokemonListState.Loading
     }
@@ -43,6 +46,7 @@ class PokemonListViewModel @Inject constructor(
                         type = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.types.orEmpty().toVO()
                     )
                 }.orEmpty()
+                _pokemonsVO.addAll(pokemonsVO)
                 _uiState.value = PokemonListState.Render(
                     pokemnos = pokemonsVO
                 )
@@ -71,6 +75,7 @@ class PokemonListViewModel @Inject constructor(
             )
         }
 
+        _pokemonsVO.addAll(pokemonsVO)
         _uiState.value = PokemonListState.Render(
             pokemnos = pokemonsVO
         )

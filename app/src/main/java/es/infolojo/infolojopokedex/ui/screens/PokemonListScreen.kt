@@ -18,6 +18,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,6 +45,7 @@ fun PokemonListScreen(
     pokemonListViewModel: PokemonListViewModel = hiltViewModel()
 ) {
     val state: State<PokemonListState?> = pokemonListViewModel.uiState.collectAsState()
+    val pokemonsVO = rememberSaveable { mutableStateOf(mutableListOf<PokemonVO>()) }
 
     Scaffold(
         topBar = {
@@ -68,15 +71,14 @@ fun PokemonListScreen(
                     }
                     is PokemonListState.Render -> {
                         (state.value as? PokemonListState.Render)?.pokemnos?.let { pokemons ->
-                            Log.d("TonyTest", "render ${pokemons}")
-                            PokemonRecyclerView(pokemons)
+                            pokemonsVO.value.addAll(pokemons)
                         }
                     }
                     else -> {
                         Log.d("TonyTest","Can not read nothing")
                     }
                 }
-
+                PokemonRecyclerView(pokemonsVO.value)
             }
         }
     )
