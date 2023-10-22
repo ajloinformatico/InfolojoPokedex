@@ -28,11 +28,15 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import es.infolojo.infolojopokedex.ui.actions.AppActions
 import es.infolojo.infolojopokedex.ui.components.AppBar
+import es.infolojo.infolojopokedex.ui.components.Spinner
 import es.infolojo.infolojopokedex.ui.states.PokemonListState
 import es.infolojo.infolojopokedex.ui.theme.InfolojoPokedexTheme
 import es.infolojo.infolojopokedex.ui.viewmodel.PokemonListViewModel
 import es.infolojo.infolojopokedex.ui.vo.PokemonVO
 import es.infolojo.infolojopokedex.utils.toCustomCapitalize
+import kotlinx.coroutines.Delay
+import kotlinx.coroutines.delay
+import java.util.logging.Handler
 
 
 private const val SCREEN_NAME = "Pokedex"
@@ -66,12 +70,13 @@ fun PokemonListScreen(
                 // TODO ADD INIT VIEWMODEL METHOD
                 when (state.value) {
                     is PokemonListState.Loading -> {
-                        Log.d("TonyTest", "Load")
+                        Spinner(true)
                         pokemonListViewModel.init()
                     }
                     is PokemonListState.Render -> {
                         (state.value as? PokemonListState.Render)?.pokemnos?.let { pokemons ->
                             pokemonsRenderVO.value.addAll(pokemons)
+                            Spinner(false)
                         }
                     }
                     else -> {
