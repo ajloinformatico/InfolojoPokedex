@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -27,8 +29,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import es.infolojo.infolojopokedex.ui.actions.AppActions
-import es.infolojo.infolojopokedex.ui.components.AppBar
 import es.infolojo.infolojopokedex.ui.components.Spinner
+import es.infolojo.infolojopokedex.ui.components.appBar.AppBar
+import es.infolojo.infolojopokedex.ui.components.appBar.IconsManagerVO
 import es.infolojo.infolojopokedex.ui.states.PokemonListState
 import es.infolojo.infolojopokedex.ui.theme.InfolojoPokedexTheme
 import es.infolojo.infolojopokedex.ui.viewmodel.PokemonListViewModel
@@ -52,10 +55,12 @@ fun PokemonListScreen(
         topBar = {
             AppBar(
                 title = SCREEN_NAME,
-                imageVector = Icons.Filled.Close
-            ) {
-                appActions(AppActions.CLOSEAPP)
-            }
+                startIcon = Icons.Filled.Close,
+                onIconClick = { appActions(AppActions.CLOSEAPP) },
+                iconsManagerVO = IconsManagerVO(
+                    showFilter = true
+                )
+            )
         },
         content = { paddingValues ->
             Surface(
@@ -63,21 +68,22 @@ fun PokemonListScreen(
                     .fillMaxSize()
                     .padding(paddingValues = paddingValues)
             ) {
-                
-                // TODO ADD INIT VIEWMODEL METHOD
+
                 when (state.value) {
                     is PokemonListState.Loading -> {
                         Spinner(true)
                         pokemonListViewModel.init()
                     }
+
                     is PokemonListState.Render -> {
                         (state.value as? PokemonListState.Render)?.pokemnos?.let { pokemons ->
                             pokemonsRenderVO.value.addAll(pokemons)
                             Spinner(false)
                         }
                     }
+
                     else -> {
-                        Log.d("TonyTest","Can not read nothing")
+                        Log.d("TonyTest", "Can not read nothing")
                     }
                 }
 
@@ -86,7 +92,6 @@ fun PokemonListScreen(
         }
     )
 }
-
 
 
 @Composable
@@ -105,53 +110,62 @@ fun PokemonRecyclerView(
 @Composable
 private fun PokemonListVieHolder(pokemonVO: PokemonVO, index: Int) {
     // TODO CONTINUE HERE ADDING POKEMON IMAGE
-    Column(
+
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 6.dp
+        ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(8.dp)
     ) {
-        with(pokemonVO) {
-            // Pokemon name
-            Row {
-                Text(
-                    text = name.toCustomCapitalize(),
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    text = "# $index",
-                    style = MaterialTheme.typography.titleLarge,
-                )
-            }
-
-            // Pokemon image
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                model = image,
-                contentDescription = "$name image"
-            )
-
-
-            // Pokemon type
-            Column {
-                Text(text = "Types", style = MaterialTheme.typography.titleMedium)
+        Column(
+            modifier = Modifier.padding(8.dp)
+        ) {
+            with(pokemonVO) {
+                // Pokemon name
                 Row {
-                    type.map {
-                        Column(modifier = Modifier.padding(end = 8.dp, top = 4.dp)) {
-                            Text(
-                                text = it.name,
-                                modifier = Modifier
-                                    .background(
-                                        color = it.color.colorValue
-                                    )
-                                    .padding(start = 4.dp, end = 4.dp, bottom = 4.dp)
-                            )
+                    Text(
+                        text = name.toCustomCapitalize(),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = "# $index",
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                }
+
+                // Pokemon image
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    model = image,
+                    contentDescription = "$name image"
+                )
+
+
+                // Pokemon type
+                Column {
+                    Text(text = "Types", style = MaterialTheme.typography.titleMedium)
+                    Row {
+                        type.map {
+                            Column(modifier = Modifier.padding(end = 8.dp, top = 4.dp)) {
+                                Text(
+                                    text = it.name,
+                                    modifier = Modifier
+                                        .background(
+                                            color = it.color.colorValue
+                                        )
+                                        .padding(start = 4.dp, end = 4.dp, bottom = 4.dp)
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+
     }
 }
 
