@@ -64,6 +64,7 @@ fun PokemonListScreen(
                 when (state.value) {
                     is PokemonListState.Loading -> {
                         Log.d("TonyTest", "Load")
+                        pokemonListViewModel.init()
                     }
                     is PokemonListState.Render -> {
                         (state.value as? PokemonListState.Render)?.pokemnos?.let { pokemons ->
@@ -75,7 +76,7 @@ fun PokemonListScreen(
                         Log.d("TonyTest","Can not read nothing")
                     }
                 }
-                pokemonListViewModel.init()
+
             }
         }
     )

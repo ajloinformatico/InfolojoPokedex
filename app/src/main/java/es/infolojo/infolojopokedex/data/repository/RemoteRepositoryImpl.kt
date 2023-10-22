@@ -12,7 +12,26 @@ class RemoteRepositoryImpl @Inject constructor(
 ) : RemoteRepository {
 
     override suspend fun getPokemons(): PokemonListContainerBO? {
-        remoteService.getAllPokemonsResource().takeIf { it.isSuccessful }?.body()?.toBO()?.let {
+        remoteService.getInitialPokemonsResource().takeIf { it.isSuccessful }?.body()?.toBO()?.let {
+
+            val pokemonsDetailBO: List<PokemonDetailBO> = it.pokemons.mapNotNull { pokemonListBO ->
+                val id: Long =
+                    pokemonListBO.detailUrl.split("pokemon").last().split("/").get(1).toLong()
+                remoteService.getPokemonDetail(id).takeIf { it.isSuccessful }?.body()?.toBo()
+            }
+
+            return PokemonListContainerBO(
+                nextUrl = it.nextUrl,
+                previousUrl = it.previousUrl,
+                count = it.count,
+                pokemons = it.pokemons,
+                pokemonsDetailBO = pokemonsDetailBO
+            )
+        } ?: run { return null }
+    }
+
+    override suspend fun getNextPokemons(): PokemonListContainerBO? {
+        remoteService.getNextPokemonsResource().takeIf { it.isSuccessful }?.body()?.toBO()?.let {
 
             val pokemonsDetailBO: List<PokemonDetailBO> = it.pokemons.mapNotNull { pokemonListBO ->
                 val id: Long =

@@ -7,11 +7,14 @@ import es.infolojo.infolojopokedex.data.bussines.list.PokemonListContainerBO
 import es.infolojo.infolojopokedex.data.repository.RemoteRepositoryImpl
 import es.infolojo.infolojopokedex.ui.states.PokemonListState
 import es.infolojo.infolojopokedex.ui.vo.toVO
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
@@ -32,18 +35,44 @@ class PokemonListViewModel @Inject constructor(
 
     private fun getPokemons() {
         viewModelScope.launch {
-            val pokemonsContainerBO: PokemonListContainerBO? = remoteRepository.getPokemons()
-            val pokemonsVO = pokemonsContainerBO?.pokemons?.mapIndexed { index, pokemon ->
-                pokemon.toVO(
-                    image = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.image.orEmpty(),
-                    type = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.types.orEmpty().toVO()
+            async {
+                val pokemonsContainerBO: PokemonListContainerBO? = remoteRepository.getPokemons()
+                val pokemonsVO = pokemonsContainerBO?.pokemons?.mapIndexed { index, pokemon ->
+                    pokemon.toVO(
+                        image = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.image.orEmpty(),
+                        type = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.types.orEmpty().toVO()
+                    )
+                }.orEmpty()
+                _uiState.value = PokemonListState.Render(
+                    pokemnos = pokemonsVO
                 )
-            }.orEmpty()
+            }.await()
 
-            _uiState.value = PokemonListState.Render(
-                pokemnos = pokemonsVO
-            )
-
+            launch {
+                getNextPokemons()
+            }
         }
+    }
+
+    private suspend fun getNextPokemons() {
+        val pokemonsContainerBO = viewModelScope.async {
+            remoteRepository.getNextPokemons()
+        }
+        renderExtraPokemons(pokemonsContainerBO.await())
+    }
+
+    private fun renderExtraPokemons(pokemonsContainerBO: PokemonListContainerBO?) {
+        pokemonsContainerBO?.pokemons ?: return
+
+        val pokemonsVO = pokemonsContainerBO.pokemons.mapIndexed { index, pokemon ->
+            pokemon.toVO(
+                image = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.image.orEmpty(),
+                type = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.types.orEmpty().toVO()
+            )
+        }
+
+        _uiState.value = PokemonListState.Render(
+            pokemnos = pokemonsVO
+        )
     }
 }

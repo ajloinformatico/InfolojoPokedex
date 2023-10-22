@@ -8,5 +8,6 @@ import retrofit2.http.Query
 
 interface RemoteRepository {
     suspend fun getPokemons(): PokemonListContainerBO?
+    suspend fun getNextPokemons(): PokemonListContainerBO?
     suspend fun getPokemonDetail(id: Long): PokemonDetailBO?
 }
