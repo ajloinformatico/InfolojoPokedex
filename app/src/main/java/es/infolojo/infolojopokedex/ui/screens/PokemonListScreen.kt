@@ -34,9 +34,6 @@ import es.infolojo.infolojopokedex.ui.theme.InfolojoPokedexTheme
 import es.infolojo.infolojopokedex.ui.viewmodel.PokemonListViewModel
 import es.infolojo.infolojopokedex.ui.vo.PokemonVO
 import es.infolojo.infolojopokedex.utils.toCustomCapitalize
-import kotlinx.coroutines.Delay
-import kotlinx.coroutines.delay
-import java.util.logging.Handler
 
 
 private const val SCREEN_NAME = "Pokedex"
