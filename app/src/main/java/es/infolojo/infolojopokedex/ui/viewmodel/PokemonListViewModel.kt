@@ -1,5 +1,6 @@
 package es.infolojo.infolojopokedex.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,14 +9,12 @@ import es.infolojo.infolojopokedex.data.repository.RemoteRepositoryImpl
 import es.infolojo.infolojopokedex.ui.states.PokemonListState
 import es.infolojo.infolojopokedex.ui.vo.PokemonVO
 import es.infolojo.infolojopokedex.ui.vo.toVO
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
@@ -38,34 +37,49 @@ class PokemonListViewModel @Inject constructor(
 
     private fun getPokemons() {
         viewModelScope.launch {
-            async {
+            val firstLoad = async {
                 val pokemonsContainerBO: PokemonListContainerBO? = remoteRepository.getPokemons()
-                val pokemonsVO = pokemonsContainerBO?.pokemons?.mapIndexed { index, pokemon ->
-                    pokemon.toVO(
-                        image = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.image.orEmpty(),
-                        type = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.types.orEmpty().toVO()
-                    )
-                }.orEmpty()
-                _pokemonsVO.addAll(pokemonsVO)
-                _uiState.value = PokemonListState.Render(
-                    pokemnos = pokemonsVO
-                )
-            }.await()
+                renderPokemons(pokemonsContainerBO)
+                pokemonsContainerBO?.nextUrl
+            }
+            getNextPokemons(firstLoad.await().orEmpty())
+        }
+    }
 
-            launch {
-                getNextPokemons()
+
+    private fun extractOffSetAndLimitFromUrl(url: String): List<Int> {
+        val newUrl = url.split("?offset=").lastOrNull()
+        return try {
+            val offset = newUrl?.split("&limit=")?.firstOrNull()?.toInt()
+            val limit = newUrl?.split("&limit=")?.lastOrNull()?.toInt()
+            if (offset != null && limit != null) {
+                listOf(offset, limit)
+            } else {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            Log.e("Error: extractOffSetAndLimitFromUrl", e.message.orEmpty())
+            emptyList()
+        }
+    }
+
+    private suspend fun getNextPokemons(url: String) {
+        val pokemonsContainerBO = viewModelScope.async {
+            extractOffSetAndLimitFromUrl(url = url).takeIf { it.isNotEmpty() }?.let {
+                remoteRepository.getNextPokemons(it[0], it[1])
             }
         }
-    }
 
-    private suspend fun getNextPokemons() {
-        val pokemonsContainerBO = viewModelScope.async {
-            remoteRepository.getNextPokemons()
+        pokemonsContainerBO.await()?.let { nextPokemonContainer ->
+            renderPokemons(nextPokemonContainer)
+            nextPokemonContainer.nextUrl.takeIf { it.isNotEmpty() }?.let { nextUrl ->
+                getNextPokemons(nextUrl)
+            }
         }
-        renderExtraPokemons(pokemonsContainerBO.await())
+
     }
 
-    private fun renderExtraPokemons(pokemonsContainerBO: PokemonListContainerBO?) {
+    private fun renderPokemons(pokemonsContainerBO: PokemonListContainerBO?) {
         pokemonsContainerBO?.pokemons ?: return
 
         val pokemonsVO = pokemonsContainerBO.pokemons.mapIndexed { index, pokemon ->

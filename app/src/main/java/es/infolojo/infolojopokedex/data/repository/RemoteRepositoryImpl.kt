@@ -30,8 +30,8 @@ class RemoteRepositoryImpl @Inject constructor(
         } ?: run { return null }
     }
 
-    override suspend fun getNextPokemons(): PokemonListContainerBO? {
-        remoteService.getNextPokemonsResource().takeIf { it.isSuccessful }?.body()?.toBO()?.let {
+    override suspend fun getNextPokemons(offset: Int, limit: Int): PokemonListContainerBO? {
+        remoteService.getNextPokemonsResource(offset, limit).takeIf { it.isSuccessful }?.body()?.toBO()?.let {
 
             val pokemonsDetailBO: List<PokemonDetailBO> = it.pokemons.mapNotNull { pokemonListBO ->
                 val id: Long =
