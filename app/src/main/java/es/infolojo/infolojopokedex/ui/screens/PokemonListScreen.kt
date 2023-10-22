@@ -45,7 +45,7 @@ fun PokemonListScreen(
     pokemonListViewModel: PokemonListViewModel = hiltViewModel()
 ) {
     val state: State<PokemonListState?> = pokemonListViewModel.uiState.collectAsState()
-    val pokemonsVO = rememberSaveable { mutableStateOf(mutableListOf<PokemonVO>()) }
+    val pokemonsRenderVO = rememberSaveable { mutableStateOf(mutableListOf<PokemonVO>()) }
 
     Scaffold(
         topBar = {
@@ -71,14 +71,15 @@ fun PokemonListScreen(
                     }
                     is PokemonListState.Render -> {
                         (state.value as? PokemonListState.Render)?.pokemnos?.let { pokemons ->
-                            pokemonsVO.value.addAll(pokemons)
+                            pokemonsRenderVO.value.addAll(pokemons)
                         }
                     }
                     else -> {
                         Log.d("TonyTest","Can not read nothing")
                     }
                 }
-                PokemonRecyclerView(pokemonsVO.value)
+
+                PokemonRecyclerView(pokemonsRenderVO.value)
             }
         }
     )
