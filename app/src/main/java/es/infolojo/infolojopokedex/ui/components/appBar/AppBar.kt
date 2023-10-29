@@ -1,28 +1,35 @@
 package es.infolojo.infolojopokedex.ui.components.appBar
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import es.infolojo.infolojopokedex.R
-import es.infolojo.infolojopokedex.ui.components.Spinner
-import es.infolojo.infolojopokedex.ui.components.SpinnerTypes
 import es.infolojo.infolojopokedex.ui.theme.InfolojoPokedexTheme
 
+// https://www.youtube.com/watch?v=dxBiEXvwSDk
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(title: String, startIcon: ImageVector, onIconClick: () -> Unit, iconsManagerVO: IconsManagerVO = IconsManagerVO()) {
+fun AppBar(title: String, startIcon: ImageVector, onIconClick: () -> Unit, iconsManagerVO: IconsManagerVO = IconsManagerVO(), pokemonNumber: String = "") {
 
     val shouldShowFilter by rememberSaveable { mutableStateOf(iconsManagerVO.showFilter) }
+    val shouldShowPokemonNumber by rememberSaveable { mutableStateOf(iconsManagerVO.showPokemonNumber) }
 
     TopAppBar(
         title = {
@@ -37,9 +44,17 @@ fun AppBar(title: String, startIcon: ImageVector, onIconClick: () -> Unit, icons
             }
         },
         actions = {
-            if (shouldShowFilter) {
-                IconButton(onClick = { onIconClick() }) {
-                    Icon(painter = painterResource(id = R.drawable.baseline_filter_list_24), contentDescription = null)
+            if (shouldShowPokemonNumber && pokemonNumber.isNotEmpty()) {
+                Text(
+                    text = pokemonNumber,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(end = 10.dp)
+                )
+            } else {
+                if (shouldShowFilter) {
+                    IconButton(onClick = { onIconClick() }) {
+                        Icon(painter = painterResource(id = R.drawable.baseline_filter_list_24), contentDescription = null)
+                    }
                 }
             }
         }
@@ -50,6 +65,13 @@ fun AppBar(title: String, startIcon: ImageVector, onIconClick: () -> Unit, icons
 @Composable
 fun AppBarPreview() {
     InfolojoPokedexTheme {
-        Spinner(show = true, type = SpinnerTypes.LINEAR)
+        AppBar(
+            title = "InfolojoPokedex",
+            startIcon = Icons.Filled.Close,
+            onIconClick = {  },
+            iconsManagerVO = IconsManagerVO(
+                showFilter = true
+            )
+        )
     }
 }

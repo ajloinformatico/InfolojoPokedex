@@ -14,12 +14,12 @@ interface RemoteService {
     @GET(ALL_POKEMONS_URL)
     suspend fun getInitialPokemonsResource(
         @Query("offset") offset: Int = 0,
-        @Query("limit") limit: Int = 100
+        @Query("limit") limit: Int = 50
     ): Response<PokemonsContainerDTO>
 
     @GET(ALL_POKEMONS_URL)
     suspend fun getNextPokemonsResource(
-        @Query("offset") offset: Int = 101,
+        @Query("offset") offset: Int = 51,
         @Query("limit") limit: Int = 10000
     ) : Response<PokemonsContainerDTO>
 

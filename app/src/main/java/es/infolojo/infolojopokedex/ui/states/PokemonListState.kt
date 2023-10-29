@@ -7,4 +7,5 @@ sealed interface PokemonListState {
     data class Render(
         val pokemnos: List<PokemonVO>
     ): PokemonListState
+    object UNKNOWN: PokemonListState
 }

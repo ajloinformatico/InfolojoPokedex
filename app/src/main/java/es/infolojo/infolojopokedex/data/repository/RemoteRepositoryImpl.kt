@@ -5,6 +5,7 @@ import es.infolojo.infolojopokedex.data.bussines.list.PokemonListContainerBO
 import es.infolojo.infolojopokedex.data.mappers.toBO
 import es.infolojo.infolojopokedex.data.mappers.toBo
 import es.infolojo.infolojopokedex.data.remote.RemoteService
+import es.infolojo.infolojopokedex.utils.extractPokemonIdFromUrl
 import javax.inject.Inject
 
 class RemoteRepositoryImpl @Inject constructor(
@@ -12,11 +13,10 @@ class RemoteRepositoryImpl @Inject constructor(
 ) : RemoteRepository {
 
     override suspend fun getPokemons(): PokemonListContainerBO? {
-        remoteService.getInitialPokemonsResource().takeIf { it.isSuccessful }?.body()?.toBO()?.let {
+        remoteService.getInitialPokemonsResource().takeIf { it.isSuccessful }?.body()?.toBO()?.let { it ->
 
             val pokemonsDetailBO: List<PokemonDetailBO> = it.pokemons.mapNotNull { pokemonListBO ->
-                val id: Long =
-                    pokemonListBO.detailUrl.split("pokemon").last().split("/").get(1).toLong()
+                val id: Long = pokemonListBO.detailUrl.extractPokemonIdFromUrl()
                 remoteService.getPokemonDetail(id).takeIf { it.isSuccessful }?.body()?.toBo()
             }
 

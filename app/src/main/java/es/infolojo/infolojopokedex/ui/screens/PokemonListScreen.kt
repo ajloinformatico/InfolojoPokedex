@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import es.infolojo.infolojopokedex.navigation.POKEMON_DETAIL_ROUTE
 import es.infolojo.infolojopokedex.ui.actions.AppActions
 import es.infolojo.infolojopokedex.ui.components.Spinner
 import es.infolojo.infolojopokedex.ui.components.appBar.AppBar
@@ -36,6 +37,7 @@ import es.infolojo.infolojopokedex.ui.states.PokemonListState
 import es.infolojo.infolojopokedex.ui.theme.InfolojoPokedexTheme
 import es.infolojo.infolojopokedex.ui.viewmodel.PokemonListViewModel
 import es.infolojo.infolojopokedex.ui.vo.PokemonVO
+import es.infolojo.infolojopokedex.utils.extractPokemonIdFromUrl
 import es.infolojo.infolojopokedex.utils.toCustomCapitalize
 
 
@@ -87,7 +89,12 @@ fun PokemonListScreen(
                     }
                 }
 
-                PokemonRecyclerView(pokemonsRenderVO.value)
+                PokemonRecyclerView(pokemonsRenderVO.value) { pokemonDetailUrl ->
+                    Log.d("TonyTest", "pokemonListScreen onLick ${pokemonDetailUrl.extractPokemonIdFromUrl()}")
+                    navController?.let {
+                        pokemonListViewModel.navigateToPokemonKey(pokemonDetailUrl, it)
+                    }
+                }
             }
         }
     )
@@ -96,31 +103,35 @@ fun PokemonListScreen(
 
 @Composable
 fun PokemonRecyclerView(
-    pokemons: List<PokemonVO>
+    pokemons: List<PokemonVO>,
+    onClick: (String) -> Unit
 ) {
     LazyColumn {
         items(pokemons.size) { index ->
             pokemons.getOrNull(index)?.let { pokemon ->
-                PokemonListVieHolder(pokemonVO = pokemon, index = index + 1)
+                PokemonListVieHolder(pokemonVO = pokemon, index = index + 1, onClick)
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PokemonListVieHolder(pokemonVO: PokemonVO, index: Int) {
-    // TODO CONTINUE HERE ADDING POKEMON IMAGE
-
+private fun PokemonListVieHolder(pokemonVO: PokemonVO, index: Int, onClick: (String) -> Unit) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(8.dp),
+        onClick = {
+            onClick(pokemonVO.detailUrl)
+        }
     ) {
         Column(
             modifier = Modifier.padding(8.dp)
+
         ) {
             with(pokemonVO) {
                 // Pokemon name
@@ -165,7 +176,6 @@ private fun PokemonListVieHolder(pokemonVO: PokemonVO, index: Int) {
                 }
             }
         }
-
     }
 }
 

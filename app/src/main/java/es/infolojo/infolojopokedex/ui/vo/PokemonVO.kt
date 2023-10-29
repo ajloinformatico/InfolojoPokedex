@@ -1,16 +1,16 @@
 package es.infolojo.infolojopokedex.ui.vo
 
-import es.infolojo.infolojopokedex.data.bussines.detail.PokemonDetailBO
 import es.infolojo.infolojopokedex.data.bussines.detail.PokemonsTypeBO
 import es.infolojo.infolojopokedex.data.bussines.list.PokemonListBO
 import es.infolojo.infolojopokedex.data.common.POKEMON_TYPE_COLOR
+import java.io.Serializable
 
 data class PokemonVO(
     val name: String,
     val image: String,
     val detailUrl: String,
     val type: List<PokemonTypeVO>
-)
+) : Serializable
 
 data class PokemonTypeVO(
     val name: String,
@@ -18,6 +18,7 @@ data class PokemonTypeVO(
     val color: POKEMON_TYPE_COLOR
 )
 
+// region listMappers
 fun PokemonListBO.toVO(image: String, type: List<PokemonTypeVO>): PokemonVO = PokemonVO(
     name = this.name,
     image = image,
@@ -32,3 +33,4 @@ fun PokemonsTypeBO.toVO(): PokemonTypeVO = PokemonTypeVO(
     typeUrl = this.typeUrl,
     color = this.color
 )
+// endregion listMappers
