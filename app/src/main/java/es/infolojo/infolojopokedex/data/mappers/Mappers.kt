@@ -16,7 +16,7 @@ fun PokemonsContainerDTO.toBO(): PokemonListContainerBO = PokemonListContainerBO
     previousUrl = this.previous.orEmpty(),
     count = this.count?.toInt() ?: 0,
     pokemons = this.results.orEmpty().filterNotNull().map { it.toBO() },
-    emptyList()
+    pokemonsDetailBO = emptyList()
 )
 
 fun PokemonListDTO.toBO(): PokemonListBO = PokemonListBO(
