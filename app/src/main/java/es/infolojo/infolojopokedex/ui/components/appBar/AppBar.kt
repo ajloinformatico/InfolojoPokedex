@@ -56,7 +56,11 @@ fun AppBar(
         },
         navigationIcon = {
             IconButton(onClick = { onIconClick() }) {
-                Icon(imageVector = startIcon , contentDescription = "")
+                Icon(
+                    imageVector = startIcon,
+                    contentDescription = "",
+                    tint = textColor
+                )
             }
         },
         actions = {
