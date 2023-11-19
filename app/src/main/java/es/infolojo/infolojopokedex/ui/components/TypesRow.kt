@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import es.infolojo.infolojopokedex.data.common.POKEMON_TYPE_COLOR
 import es.infolojo.infolojopokedex.ui.theme.InfolojoPokedexTheme
 import es.infolojo.infolojopokedex.ui.vo.PokemonTypeVO
+import es.infolojo.infolojopokedex.utils.ThemeHelper.findCorrectTextColor
 
 private const val TYPES_TITLE = "Types"
 
@@ -28,14 +30,17 @@ fun TypesRow(
         Text(text = TYPES_TITLE, style = titleStyle)
         Row {
             types.map {
-                Column(modifier = Modifier.padding(end = 8.dp, top = 4.dp)) {
+                Column(
+                    modifier = Modifier.padding(end = 8.dp, top = 4.dp)
+                        .background(
+                            color = it.color.colorValue,
+                            shape = RoundedCornerShape(25)
+                        )
+                ) {
                     Text(
                         text = it.name,
-                        modifier = Modifier
-                            .background(
-                                color = it.color.colorValue
-                            )
-                            .padding(start = 4.dp, end = 4.dp, bottom = 4.dp)
+                        color = findCorrectTextColor(color = it.color.colorValue),
+                        modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 4.dp)
                     )
                 }
             }

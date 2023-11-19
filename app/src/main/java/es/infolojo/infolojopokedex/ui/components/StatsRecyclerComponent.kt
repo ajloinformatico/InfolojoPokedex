@@ -1,4 +1,4 @@
-package es.infolojo.infolojopokedex.ui.screens
+package es.infolojo.infolojopokedex.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

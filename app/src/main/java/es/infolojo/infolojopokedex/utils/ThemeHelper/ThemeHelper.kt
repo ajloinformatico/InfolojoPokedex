@@ -40,5 +40,5 @@ fun isDarkColor(color: Color): Boolean {
     // These values are the definition of luminance for digital formats: https://en.wikipedia.org/wiki/Luma_%28video%29
     val darkness =
         1 - (0.299 * color.red + 0.587 * color.green + 0.114 * color.blue)
-    return darkness >= 0.5
+    return darkness >= 0.4
 }
