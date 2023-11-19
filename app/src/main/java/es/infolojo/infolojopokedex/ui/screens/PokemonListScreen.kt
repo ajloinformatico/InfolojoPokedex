@@ -1,7 +1,6 @@
 package es.infolojo.infolojopokedex.ui.screens
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import es.infolojo.infolojopokedex.navigation.POKEMON_DETAIL_ROUTE
 import es.infolojo.infolojopokedex.ui.actions.AppActions
 import es.infolojo.infolojopokedex.ui.components.Spinner
+import es.infolojo.infolojopokedex.ui.components.TypesRow
 import es.infolojo.infolojopokedex.ui.components.appBar.AppBar
 import es.infolojo.infolojopokedex.ui.components.appBar.IconsManagerVO
 import es.infolojo.infolojopokedex.ui.states.PokemonListState
@@ -90,7 +89,10 @@ fun PokemonListScreen(
                 }
 
                 PokemonRecyclerView(pokemonsRenderVO.value) { pokemonDetailUrl ->
-                    Log.d("TonyTest", "pokemonListScreen onLick ${pokemonDetailUrl.extractPokemonIdFromUrl()}")
+                    Log.d(
+                        "TonyTest",
+                        "pokemonListScreen onLick ${pokemonDetailUrl.extractPokemonIdFromUrl()}"
+                    )
                     navController?.let {
                         pokemonListViewModel.navigateToPokemonKey(pokemonDetailUrl, it)
                     }
@@ -156,24 +158,8 @@ private fun PokemonListVieHolder(pokemonVO: PokemonVO, index: Int, onClick: (Str
                 )
 
 
-                // Pokemon type
-                Column {
-                    Text(text = "Types", style = MaterialTheme.typography.titleMedium)
-                    Row {
-                        type.map {
-                            Column(modifier = Modifier.padding(end = 8.dp, top = 4.dp)) {
-                                Text(
-                                    text = it.name,
-                                    modifier = Modifier
-                                        .background(
-                                            color = it.color.colorValue
-                                        )
-                                        .padding(start = 4.dp, end = 4.dp, bottom = 4.dp)
-                                )
-                            }
-                        }
-                    }
-                }
+                // Pokemon type Loaded with a common component
+                TypesRow(types = type)
             }
         }
     }

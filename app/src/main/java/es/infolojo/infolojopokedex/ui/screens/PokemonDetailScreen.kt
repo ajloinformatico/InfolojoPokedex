@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import es.infolojo.infolojopokedex.data.common.POKEMON_TYPE_COLOR
 import es.infolojo.infolojopokedex.ui.components.Spinner
+import es.infolojo.infolojopokedex.ui.components.TypesRow
 import es.infolojo.infolojopokedex.ui.components.appBar.AppBar
 import es.infolojo.infolojopokedex.ui.components.appBar.IconsManagerVO
 import es.infolojo.infolojopokedex.ui.states.PokemonDetailState
@@ -117,7 +118,7 @@ fun PokemonDetailContent(
     ) {
         with(pokemon) {
             DetailImagesRecyclerView(
-                images = listOf(image, image, image),
+                images = images,
                 pokemonName = pokemonName,
                 type = types.firstOrNull()
             )
@@ -186,15 +187,61 @@ fun ScrollableContent(
     pokemon: PokemonDetailVO
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(8.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 8.dp)
     ) {
-        Text(
-            text = "loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum",
-            style = MaterialTheme.typography.titleMedium
+        TypesRow(
+            types = pokemon.types,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp, bottom = 4.dp),
+            titleStyle = MaterialTheme.typography.titleLarge
         )
+
+        StatsRecyclerComponent(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp),
+            stats = getStatsMockk(),
+            backGroundColor = pokemon.types.firstOrNull()?.color?.colorValue
+        )
+
+        Column {
+            Text(
+                text = "More information",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Text(
+                modifier = Modifier.padding(top = 4.dp),
+                text = "loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum loren ipsum loren ipsum loren ipsum  loren ipsum  loren ipsum  loren ipsum",
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
     }
 }
 // endregion scrollable content
+
+// TODO REMOVE MOCKK IN FUTURE FEATURES
+fun getStatsMockk(): List<PokemonStatsVO> {
+    return listOf(
+        PokemonStatsVO(
+            title = "Fuerza",
+            color = POKEMON_TYPE_COLOR.FIRE,
+            stat = 50
+        ),
+        PokemonStatsVO(
+            title = "Ejemplo",
+            color = POKEMON_TYPE_COLOR.POISON,
+            stat = 25
+        ),
+        PokemonStatsVO(
+            title = "Example",
+            color = POKEMON_TYPE_COLOR.FAIRY,
+            stat = 98
+        ),
+    )
+}
 
 /**
 @Preview(showBackground = true)

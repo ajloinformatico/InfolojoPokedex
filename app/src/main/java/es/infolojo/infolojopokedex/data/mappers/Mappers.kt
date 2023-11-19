@@ -7,6 +7,7 @@ import es.infolojo.infolojopokedex.data.bussines.list.PokemonListContainerBO
 import es.infolojo.infolojopokedex.data.common.POKEMON_TYPE_COLOR
 import es.infolojo.infolojopokedex.data.remote.detail.PokemonDetailDTO
 import es.infolojo.infolojopokedex.data.remote.detail.PokemonsTypeDTO
+import es.infolojo.infolojopokedex.data.remote.detail.getAllImages
 import es.infolojo.infolojopokedex.data.remote.list.PokemonListDTO
 import es.infolojo.infolojopokedex.data.remote.list.PokemonsContainerDTO
 import java.util.Locale
@@ -24,10 +25,10 @@ fun PokemonListDTO.toBO(): PokemonListBO = PokemonListBO(
     detailUrl = this.url.orEmpty()
 )
 
-fun PokemonDetailDTO.toBo() = PokemonDetailBO(
+fun PokemonDetailDTO.toBo(): PokemonDetailBO = PokemonDetailBO(
     name = this.name.orEmpty(),
     id = this.id,
-    image = this.sprites?.other?.officialArtWork?.frontDefault.orEmpty(),
+    images = this.sprites?.getAllImages().orEmpty(),
     types = this.types.orEmpty().filterNotNull().toBO()
 )
 
