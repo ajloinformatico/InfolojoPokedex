@@ -203,7 +203,7 @@ fun ScrollableContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp),
-            stats = getStatsMockk(),
+            stats = pokemon.stats,
             backGroundColor = pokemon.types.firstOrNull()?.color?.colorValue
         )
 
@@ -222,28 +222,7 @@ fun ScrollableContent(
 }
 // endregion scrollable content
 
-// TODO REMOVE MOCKK IN FUTURE FEATURES
-fun getStatsMockk(): List<PokemonStatsVO> {
-    return listOf(
-        PokemonStatsVO(
-            title = "Fuerza",
-            color = POKEMON_TYPE_COLOR.FIRE,
-            stat = 50
-        ),
-        PokemonStatsVO(
-            title = "Ejemplo",
-            color = POKEMON_TYPE_COLOR.POISON,
-            stat = 25
-        ),
-        PokemonStatsVO(
-            title = "Example",
-            color = POKEMON_TYPE_COLOR.FAIRY,
-            stat = 98
-        ),
-    )
-}
-
-/**
+/** TODO FIX THIS WARNING
 @Preview(showBackground = true)
 @Composable
 fun PokemonDetailScreenPreview() {

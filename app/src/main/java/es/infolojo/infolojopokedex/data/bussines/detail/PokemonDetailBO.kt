@@ -4,5 +4,6 @@ data class PokemonDetailBO(
     val name: String,
     val id: Long,
     val images: List<String>,
-    val types: List<PokemonsTypeBO>
+    val types: List<PokemonsTypeBO>,
+    val stats: List<PokemonStatBO>
 )

@@ -24,6 +24,8 @@ fun String.toLongOrDefault(default: Long = DEFAULT_LONG): Long {
     }
 }
 
+fun String.formatSpacesAndCapitalize() = this.replace("-", " ").toCustomCapitalize()
+
 fun String.takeIfIsNotAnSVGOrNull(): String? = this.takeUnless { it.endsWith(SVG) }
 
 fun String.takeIfIsNotAnSVGOrEmpty(): String = this.takeIfIsNotAnSVGOrNull().orEmpty()
