@@ -16,21 +16,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import es.infolojo.infolojopokedex.data.common.POKEMON_STAT_COLOR
 import es.infolojo.infolojopokedex.data.common.POKEMON_TYPE_COLOR
 import es.infolojo.infolojopokedex.ui.theme.InfolojoPokedexTheme
+import es.infolojo.infolojopokedex.ui.vo.StatDetailVO
 
 private const val STATS_TITLE = "Stats"
-
-data class PokemonStatsVO(
-    val title: String,
-    val stat: Int,
-    val color: POKEMON_TYPE_COLOR
-)
 
 @Composable
 fun StatsRecyclerComponent(
     modifier: Modifier,
-    stats: List<PokemonStatsVO>,
+    stats: List<StatDetailVO>,
     titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
     subTitleStyle: TextStyle = MaterialTheme.typography.titleMedium,
     backGroundColor: Color?
@@ -57,25 +53,25 @@ fun StatsRecyclerComponent(
 @Composable
 fun StatsComponentViewHolder(
     modifier: Modifier,
-    stat: PokemonStatsVO,
+    stat: StatDetailVO,
     subTitleStyle: TextStyle,
     backGroundColor: Color?
 ) {
-    val sliderPosition by remember { mutableIntStateOf(stat.stat) }
+    val sliderPosition by remember { mutableIntStateOf(stat.level) }
     Column(
         modifier = modifier
     ) {
         Text(
-            text = "${stat.title} $sliderPosition",
+            text = "${stat.name} $sliderPosition",
             style = subTitleStyle,
-            color = stat.color.colorValue
+            color = stat.color.value
         )
         Slider(
             value = sliderPosition.toFloat(),
             onValueChange = { /* no-op */ },
             colors = SliderDefaults.colors(
-                thumbColor = stat.color.colorValue,
-                activeTrackColor = stat.color.colorValue,
+                thumbColor = stat.color.value,
+                activeTrackColor = stat.color.value,
                 inactiveTrackColor = backGroundColor
                     ?: MaterialTheme.colorScheme.secondaryContainer,
             ),
@@ -89,23 +85,22 @@ fun StatsComponentViewHolder(
 @Preview(showBackground = true)
 fun StatsComponentPreview() {
     val stats = listOf(
-        PokemonStatsVO(
-            title = "Fuerza",
-            color = POKEMON_TYPE_COLOR.FIRE,
-            stat = 50
+        StatDetailVO(
+            name = "Hp",
+            color = POKEMON_STAT_COLOR.HP,
+            level = 50
         ),
-        PokemonStatsVO(
-            title = "Ejemplo",
-            color = POKEMON_TYPE_COLOR.POISON,
-            stat = 25
+        StatDetailVO(
+            name = "Attack",
+            color = POKEMON_STAT_COLOR.ATTACK,
+            level = 25
         ),
-        PokemonStatsVO(
-            title = "Example",
-            color = POKEMON_TYPE_COLOR.FAIRY,
-            stat = 98
+        StatDetailVO(
+            name = "Speed",
+            color = POKEMON_STAT_COLOR.SPEED,
+            level = 98
         ),
-
-        )
+    )
     InfolojoPokedexTheme {
         StatsRecyclerComponent(
             modifier = Modifier
