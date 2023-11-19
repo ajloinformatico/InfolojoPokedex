@@ -5,5 +5,9 @@ import java.io.Serializable
 
 data class PokemonSpritesOtherDTO(
     @SerializedName("official-artwork")
-    val officialArtWork: OfficialArtWork?
+    val officialArtWorkDTO: OtherSpritesContentDTO?,
+    @SerializedName("home")
+    val homeSpritesDTO: OtherSpritesContentDTO?,
+    @SerializedName("dream_world")
+    val dreamWorldSpritesDTO: OtherSpritesContentDTO?
 ) : Serializable

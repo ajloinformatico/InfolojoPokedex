@@ -8,7 +8,7 @@ import java.io.Serializable
 data class PokemonDetailVO(
     val id: Long,
     val name: String,
-    val image: String,
+    val images: List<String>,
     val types: List<PokemonTypeVO>,
     val abilities: List<AbilityVO>
 ) : Serializable
@@ -22,7 +22,7 @@ data class AbilityVO(
 fun PokemonDetailBO.toPokemonDetailVO() = PokemonDetailVO(
     id = id,
     name = name,
-    image = image,
+    images = images,
     types = types.toVO(),
     abilities = listOf(
         AbilityVO(

@@ -87,7 +87,7 @@ class PokemonListViewModel @Inject constructor(
 
         val pokemonsVO = pokemonsContainerBO.pokemons.mapIndexed { index, pokemon ->
             pokemon.toVO(
-                image = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.image.orEmpty(),
+                image = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.images?.firstOrNull().orEmpty(),
                 type = pokemonsContainerBO.pokemonsDetailBO.getOrNull(index)?.types.orEmpty().toVO()
             )
         }
