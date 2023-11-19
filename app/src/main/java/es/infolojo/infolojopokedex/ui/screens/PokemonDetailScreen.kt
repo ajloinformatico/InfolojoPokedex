@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import es.infolojo.infolojopokedex.data.common.POKEMON_TYPE_COLOR
 import es.infolojo.infolojopokedex.ui.components.Spinner
+import es.infolojo.infolojopokedex.ui.components.StatsRecyclerComponent
 import es.infolojo.infolojopokedex.ui.components.TypesRow
 import es.infolojo.infolojopokedex.ui.components.appBar.AppBar
 import es.infolojo.infolojopokedex.ui.components.appBar.IconsManagerVO
