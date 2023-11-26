@@ -79,7 +79,6 @@ class PokemonListViewModel @Inject constructor(
                 getNextPokemons(nextUrl)
             }
         }
-
     }
 
     private fun renderPokemons(pokemonsContainerBO: PokemonListContainerBO?) {

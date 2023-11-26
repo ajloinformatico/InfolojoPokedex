@@ -1,6 +1,9 @@
 package es.infolojo.infolojopokedex.ui.components.appBar
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import es.infolojo.infolojopokedex.R
 import es.infolojo.infolojopokedex.data.common.POKEMON_TYPE_COLOR
 import es.infolojo.infolojopokedex.ui.theme.InfolojoPokedexTheme
@@ -49,10 +53,27 @@ fun AppBar(
             containerColor = backGroundColor
         ),
         title = {
-            Text(
-                text = title,
-                color = textColor
-            )
+            Row {
+                // If appBar is loaded with icon image Then load this icon image else load app image
+                iconsManagerVO.appBarImage?.let {
+                    AsyncImage(
+                        modifier = Modifier.width(30.dp),
+                        model = it,
+                        contentDescription = null
+                    )
+                } ?: run {
+                    Image(
+                        painter = painterResource(R.mipmap.ic_launcher_foreground),
+                        modifier = Modifier.width(30.dp).padding(top = 1.dp),
+                        contentDescription = null
+                    )
+                }
+                Text(
+                    modifier = Modifier.padding(start = 8.dp),
+                    text = title,
+                    color = textColor
+                )
+            }
         },
         navigationIcon = {
             IconButton(onClick = { onIconClick() }) {

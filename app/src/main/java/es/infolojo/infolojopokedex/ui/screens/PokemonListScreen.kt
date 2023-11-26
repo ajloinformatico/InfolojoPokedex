@@ -59,7 +59,7 @@ fun PokemonListScreen(
                 startIcon = Icons.Filled.Close,
                 onIconClick = { appActions(AppActions.CLOSEAPP) },
                 iconsManagerVO = IconsManagerVO(
-                    showFilter = true
+                    showFilter = false
                 )
             )
         },

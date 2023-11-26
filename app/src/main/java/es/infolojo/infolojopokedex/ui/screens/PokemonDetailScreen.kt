@@ -65,6 +65,7 @@ fun PokemonDetailScreen(
                     navController?.navigateUp()
                 },
                 iconsManagerVO = IconsManagerVO(
+                    appBarImage = pokemonDetailRenderVO.value?.images?.firstOrNull(),
                     showFilter = false,
                     showPokemonNumber = true
                 ),
